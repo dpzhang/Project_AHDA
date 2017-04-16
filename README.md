@@ -12,14 +12,13 @@ This repository contains the final course project for CAPP 30123.
 description files. 
 
 ## Contributors
-**_A_lice Mee Seon Chung** [Alicechung](https://github.com/Alicechung)
+**Alice Mee Seon Chung** [Alicechung](https://github.com/Alicechung)
 
-**_H_uanye Liu** [huanye](https://github.com/huanye)
+**Huanye Liu** [huanye](https://github.com/huanye)
 
-**_D_ongping Gabriel Zhang** [dpzhang](https://github.com/dpzhang)
+**Dongping Gabriel Zhang** [dpzhang](https://github.com/dpzhang)
 
-**_A_riel Ningyin Xu** [sixisxu](https://github.com/sixisxu)
+**Ariel Ningyin Xu** [sixisxu](https://github.com/sixisxu)
 
-We would like to express our sincere gratitude to **Dr. Matthew Wachs** and 
-**Dr. Amitabh Chaudhary** for your teaching, guidance, and support throughout 
-the quarter.
+We would like to express our sincere gratitude to **Dr. Matthew Wachs** for 
+your teaching, guidance, and support throughout the quarter.
