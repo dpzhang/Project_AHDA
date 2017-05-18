@@ -11,7 +11,9 @@ This repository contains the final course project for CAPP 30123.
 
 <code>Data</code>: contains a small subset data of 5000 rows of taxi trips for
 testing.
+
 <code>LitReview</code>: contains literature reviews for the project.
+
 <code>ProjectInfo</code>: contains project proposal, presentation slides, and 
 description files. 
 
