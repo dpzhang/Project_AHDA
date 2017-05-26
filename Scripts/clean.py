@@ -51,7 +51,7 @@ def get_centroid(a_string):
         if not centroid: # if list is emppty
             return (0, 0)
         else:
-            latitude, longitude = centroid
+            longitude, latitude = centroid
             return float(latitude), float(longitude)
 
 
