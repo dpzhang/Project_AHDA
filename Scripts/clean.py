@@ -101,9 +101,10 @@ def clean_data(input_file_name, output = False, \
     taxi_data.trip_id = taxi_data.index.values
 
     ##### simplify 'taxi_id' starting from 0 #####
-    taxi_data.taxi_id = taxi_data.taxi_id.astype('category')
-    taxi_id_relevel = range(1, len(taxi_data.taxi_id.cat.categories) + 1)
-    taxi_data.taxi_id.cat.categories = taxi_id_relevel
+    #taxi_data.taxi_id = taxi_data.taxi_id.astype('category')
+    #taxi_id_relevel = range(1, len(taxi_data.taxi_id.cat.categories) + 1)
+    #taxi_data.taxi_id.cat.categories = taxi_id_relevel
+    #taxi_data.taxi_id = taxi_data.taxi_id.apply(int)
 
     ##### process timestamp columns #####
     timedate_cols = ['pickup_time', 'dropoff_time']

@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import os
 import re
-from clean import staxi, output_path
+from Clean import staxi, output_path
 from geopy.distance import vincenty
 from geopy.distance import great_circle
 
@@ -57,36 +57,24 @@ def get_distance(origin_col, destination_col, vincenty_distance = True):
             distance = vincenty(origin, destination).miles
         else:
             distance = great_circle(origin, destination).miles
-        absolute_distance.append(distance)
+        absolute_distance.append(round(distance, 3))
        
     return absolute_distance
 staxi['AbsDistance'] = get_distance(staxi.pickup_centroid, staxi.dropoff_centroid)
 
 ##### 4. ratio of real (actual) path length over shortest path length (RRSL)#####
 # explanation: dividing actual distance by absolute distance
-staxi['RRSL'] = staxi['miles'] / staxi['AbsDistance']
+staxi['RRSL'] = round(staxi['miles'] / staxi['AbsDistance'], 3)
 
-##### 5. Absolute Velocity: Absolute Distance / Trip Duration #####
+##### 5. Actual Velocity: Actual Distance / Trip Duration #####
 # unit: miles / hr
-staxi['AbsVelocity'] = staxi['AbsDistance'] / (staxi['seconds']/3600)
+staxi['AvgVelocity'] = round(staxi['miles'] / (staxi['seconds']/3600), 3)
 
-##### 6. Actual Velocity: Actual Distance / Trip Duration #####
-# unit: miles / hr
-staxi['AclVelocity'] = staxi['miles'] / (staxi['seconds']/3600)
+##### 6. Ratio of real path travel time over shortest path travel time (RRST) #####
+staxi['AbsTime'] = round(staxi['AbsDistance'] / staxi['AvgVelocity'] * 3600, 3)
+staxi['RRST'] = round(staxi['seconds'] / staxi['AbsTime'], 3)
 
-##### 7. Ratio of real velocity over relative velocity (RRVV) #####
-# dividing relative velocity by absolute velocity
-staxi['RRVV'] = staxi['AclVelocity'] / staxi['AbsVelocity']
-
-##### 8. Ratio of real path travel time over shortest path travel time (RRST) #####
-# relative (actual) time: in the dataset
-# absolute time: absolute_distance / average_velocity
-# interpretation: condition on averaged velocity of the whole trip, how many 
-# more seconds did the driver waste for every second the trip have to take
-staxi['AbsTime'] = staxi['AbsDistance'] / staxi['AbsVelocity'] * 3600
-staxi['RRST'] = staxi['AbsTime'] / staxi['seconds']
-
-##### 8. Time Period: 8 levels #####
+##### 7. Time Period: 8 levels #####
 def get_timePeriod(timestamp):
     hour = timestamp.hour
     if hour in [1, 2, 3]:
@@ -126,5 +114,20 @@ def get_weekday(timestamp):
         return 7
 staxi['weekday'] = staxi.pickup_time.apply(get_weekday)
 
+##### 10. Year: indication of year #####
+def get_year(timestamp):
+    return timestamp.year
+staxi['year'] = staxi.pickup_time.apply(get_year)
+
+##### 11. Month: indication of month #####
+def get_month(timestamp):
+    return timestamp.month
+staxi['month'] = staxi.pickup_time.apply(get_month)
+
+##### 12. day: indication of day #####
+def get_day(timestamp):
+    return timestamp.day
+staxi['day'] = staxi.pickup_time.apply(get_day)
+
 # export the processed dataset
-staxi.to_csv(output_path, index = False)
+staxi.to_csv(output_path, index = False, float_format='%.3f')
