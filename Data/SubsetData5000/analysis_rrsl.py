@@ -18,12 +18,24 @@ case1 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == '
 case1_mean = case1.HL.mean()
 # on average, for high inome drivers, they drive 0.45 miles less for every absolute mile
 
-
 # central to Far Southeast Side
 case2 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'FarNorthSide')]
 
 # central to Southwest Side
 case3 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'SouthwestSide')]
+
+# Central to WestSide
+case6 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'WestSide')]
+
+# Central to NorthSide
+case7 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'NorthSide')]
+
+# Central to SouthSide
+case8 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'SouthSide')]
+
+
+
+
 
 
 # FarNorthSide to Central
@@ -33,5 +45,3 @@ case4 = rrsl_df[ (rrsl_df['origin'] == 'FarNorthSide') & (rrsl_df['destination']
 case5 = rrsl_df[ (rrsl_df['origin'] == 'NorthSide') & (rrsl_df['destination'] == 'Central')]
 
 
-# Central to WestSide
-case6 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'WestSide')]
