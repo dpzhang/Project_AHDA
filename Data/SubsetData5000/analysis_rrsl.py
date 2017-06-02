@@ -15,7 +15,7 @@ case1 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == '
 # we can see for all trips pickup and dropoff in the central regions
 # high income drivers have lower RRSL than that of low income drivers
 # interpretation: high income drivers tend to find closer route in the city
-case1_mean = case1.HL.mean()
+case1_mean = case1['High-Low'].mean()
 # on average, for high inome drivers, they drive 0.45 miles less for every absolute mile
 
 
@@ -35,3 +35,13 @@ case5 = rrsl_df[ (rrsl_df['origin'] == 'NorthSide') & (rrsl_df['destination'] ==
 
 # Central to WestSide
 case6 = rrsl_df[ (rrsl_df['origin'] == 'Central') & (rrsl_df['destination'] == 'WestSide')]
+
+# West to Central
+case8 = rrsl_df[ (rrsl_df['origin'] == 'WestSide') & (rrsl_df['destination'] == 'Central')]
+
+
+# Central to surround
+case7 = rrsl_df[ (rrsl_df['origin'] == 'Central') & \
+                 (rrsl_df['destination'] ==  'NorthSide') |\
+                 (rrsl_df['destination'] == 'WestSide') | \
+                 (rrsl_df['destination'] == 'SouthSide')]

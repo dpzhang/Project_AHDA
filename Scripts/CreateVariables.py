@@ -57,9 +57,9 @@ def get_distance(origin_col, destination_col, vincenty_distance = True):
             distance = vincenty(origin, destination).miles
         else:
             distance = great_circle(origin, destination).miles
-        absolute_distance.append(round(distance, 3))
-       
+        absolute_distance.append(round(distance, 3))       
     return absolute_distance
+
 staxi['AbsDistance'] = get_distance(staxi.pickup_centroid, staxi.dropoff_centroid)
 
 ##### 4. ratio of real (actual) path length over shortest path length (RRSL)#####
@@ -68,7 +68,19 @@ staxi['RRSL'] = round(staxi['miles'] / staxi['AbsDistance'], 3)
 
 ##### 5. Actual Velocity: Actual Distance / Trip Duration #####
 # unit: miles / hr
-staxi['AvgVelocity'] = round(staxi['miles'] / (staxi['seconds']/3600), 3)
+staxi['AvgVelocity'] = 23.7
+#plt.style.use('ggplot')
+#weights = (1/staxi.AvgVelocity.shape[0]) * np.ones_like(staxi.AvgVelocity)
+#plt.hist(staxi.AvgVelocity, bins = 500, color = 'r', weights = weights)
+#plt.title("Distribution of Chicago taxi trips avg. velocity")
+#plt.xlabel('Velocity')
+#plt.ylabel('density')
+##plt.axvline(x = mean_income, color = 'black', label = 'mean: ' + str(round(mean_income,4)))
+##plt.axvline(x = mean_income + 2 * std_income, linestyle = "--", color = 'green', label = '2SD: ' + str(round(mean_income + 2 * std_income, 4)))
+##print(max(income_list))
+#plt.legend()
+#plt.savefig('temp.png')
+#plt.close()
 
 ##### 6. Ratio of real path travel time over shortest path travel time (RRST) #####
 staxi['AbsTime'] = round(staxi['AbsDistance'] / staxi['AvgVelocity'] * 3600, 3)

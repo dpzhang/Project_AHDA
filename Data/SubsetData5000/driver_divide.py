@@ -109,10 +109,10 @@ class MRIncomeDiff(MRJob):
                 
 if __name__ == '__main__':
     MRIncomeAnnual.run()
-    income_list = np.array(list(income_dict.values()))
-    plt.hist(income_list,1000)
+#    income_list = np.array(list(income_dict.values()))
+#    plt.hist(income_list,1000)
     #print(max(income_list))
-    plt.xlim([0,1000])
+#    plt.xlim([0,1000])
     #plt.savefig('temp.png')
 
     ddev = np.std(np.log(income_list+0.02))
