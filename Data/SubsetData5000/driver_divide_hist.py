@@ -120,10 +120,10 @@ class MRIncomeDiff(MRJob):
                 
 if __name__ == '__main__':
     MRIncomeAnnual.run()
-    income_list = np.array(list(income_dict.values()))
-    log_income = np.log(income_list+0.02)
-    mean_income = np.mean(log_income)
-    std_income = np.std(log_income)
+    #income_list = np.array(list(income_dict.values()))
+    #log_income = np.log(income_list+0.02)
+    #mean_income = np.mean(log_income)
+    #std_income = np.std(log_income)
     #plt.style.use('ggplot')
     #weights = (1/log_income.shape[0]) * np.ones_like(log_income)
     #plt.hist(log_income, bins = 500, color = 'r', weights = weights)
@@ -140,14 +140,14 @@ if __name__ == '__main__':
 
 
 
-    ddev = np.std(np.log(income_list+0.02))
-    dmean = np.mean(np.log(income_list+0.02))
-    for dID in income_dict:
-        if np.log(income_dict[dID]+0.02)>ddev*2+dmean:
-            income_class[dID] = 1
-        if dmean-2*ddev<=np.log(income_dict[dID]+0.02)<=dmean+2*ddev:
-            income_class[dID] = 0
+    #ddev = np.std(np.log(income_list+0.02))
+    #dmean = np.mean(np.log(income_list+0.02))
+    #for dID in income_dict:
+    #    if np.log(income_dict[dID]+0.02)>ddev*2+dmean:
+    #        income_class[dID] = 1
+    #    if dmean-2*ddev<=np.log(income_dict[dID]+0.02)<=dmean+2*ddev:
+    #        income_class[dID] = 0
     #print(sum(income_class.values()))
-    MRIncomeDiff.run()
+    #MRIncomeDiff.run()
     
          
