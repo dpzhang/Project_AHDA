@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import os
 import re
-from Clean import staxi, output_path
+from clean import staxi, output_path
 from geopy.distance import vincenty
 from geopy.distance import great_circle
 
