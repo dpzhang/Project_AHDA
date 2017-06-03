@@ -135,9 +135,3 @@ def clean_data(input_file_name, output = False, \
     else:
         #write out a cleaned csv file
         taxi_data.to_csv(output_file_name, index = False)
-
-
-# load the data
-#staxi_path = os.path.join(os.pardir, "Data/SubsetData5000/STaxiTrips.csv")
-#output_path = os.path.join(os.pardir, "Data/SubsetData5000/CSTaxiTrips.csv")
-#staxi = clean_data(staxi_path) 
