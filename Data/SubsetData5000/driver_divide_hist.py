@@ -11,8 +11,8 @@ from mrjob.step import MRStep
 import numpy as np
 
 
-income_dict={}
-income_class={}
+#income_dict={}
+#income_class={}
 
 class MRIncomeAnnual(MRJob):
     
@@ -38,7 +38,7 @@ class MRIncomeAnnual(MRJob):
         n_year = len(f_list)
         f_total = sum(f_list)
         average = f_total/n_year
-        income_dict[key]=average
+        #income_dict[key]=average
         yield key, average
     
     def steps(self):
