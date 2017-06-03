@@ -18,6 +18,10 @@ class MRIncomeAnnual(MRJob):
     
     def mapper_first(self,_,line):
         rlist = line.split(',')
+        try:
+            total = float(rlist[14])
+        except:
+            total = 0
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
         total = float(rlist[14])
@@ -48,6 +52,10 @@ class MRIncomeDiff(MRJob):
     
     def mapper_first(self,_,line):
         rlist = line.split(',')
+        try:
+            total = float(rlist[14])
+        except:
+            total = 0
         
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
@@ -237,10 +245,10 @@ class MRTimePeriodDiff(MRJob):
                 
 if __name__ == '__main__':
     MRIncomeAnnual.run()
-    income_list = np.array(list(income_dict.values()))
-    plt.hist(income_list,1000)
+#    income_list = np.array(list(income_dict.values()))
+#    plt.hist(income_list,1000)
     #print(max(income_list))
-    plt.xlim([0,1000])
+#    plt.xlim([0,1000])
     #plt.savefig('temp.png')
 
     ddev = np.std(np.log(income_list+0.02))
