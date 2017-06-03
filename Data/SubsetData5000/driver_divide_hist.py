@@ -9,8 +9,6 @@ Created on Thu Jun  1 12:12:06 2017
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 import numpy as np
-import matplotlib.pyplot as plt
-import csv
 
 
 income_dict={}
@@ -50,71 +48,71 @@ class MRIncomeAnnual(MRJob):
                 MRStep(reducer=self.reducer_final)
                 ]
 
-class MRIncomeDiff(MRJob):
+# class MRIncomeDiff(MRJob):
     
-    def mapper_first(self,_,line):
-        rlist = line.split(',')
-        try:
-            actual_dist = float(rlist[5])
-            ab_dist = float(rlist[27])
-        except:
-            actual_dist = 0.0
-            ab_dist = 0.0
-        taxi_id = rlist[1]
-        year = rlist[2].split('-')[0]
-        pick_up = rlist[25]
-        drop_off = rlist[26]
-        #actual_dist = float(rlist[5])
-        #ab_dist = float(rlist[27])
-        rrsl = rlist[28]
-        rrst = rlist[31]
-        #print(rrsl)
-        #print(type(rrsl))
-        #print(rrst)
-        if actual_dist!=0.0 and ab_dist!=0.0 and rrst!='':
-            yield (taxi_id,year,pick_up,drop_off), (actual_dist/ab_dist,float(rrsl),float(rrst))
+#     def mapper_first(self,_,line):
+#         rlist = line.split(',')
+#         try:
+#             actual_dist = float(rlist[5])
+#             ab_dist = float(rlist[27])
+#         except:
+#             actual_dist = 0.0
+#             ab_dist = 0.0
+#         taxi_id = rlist[1]
+#         year = rlist[2].split('-')[0]
+#         pick_up = rlist[25]
+#         drop_off = rlist[26]
+#         #actual_dist = float(rlist[5])
+#         #ab_dist = float(rlist[27])
+#         rrsl = rlist[28]
+#         rrst = rlist[31]
+#         #print(rrsl)
+#         #print(type(rrsl))
+#         #print(rrst)
+#         if actual_dist!=0.0 and ab_dist!=0.0 and rrst!='':
+#             yield (taxi_id,year,pick_up,drop_off), (actual_dist/ab_dist,float(rrsl),float(rrst))
         
     
-    def reducer_first(self,key,tuples):
-        tuple_list = list(tuples)
-        ratio_list = [tuple_list[i][0] for i in range(len(tuple_list))]
-        rrsl_list = [tuple_list[i][1] for i in range(len(tuple_list))]
-        rrst_list = [tuple_list[i][2] for i in range(len(tuple_list))]
-        ave_ratio = sum(ratio_list)/len(ratio_list)
-        ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
-        ave_rrst  = sum(rrst_list)/len(rrst_list)
-        if key[0] in income_class:
-            yield (key[1],key[2],key[3],income_class[key[0]]),(ave_ratio,ave_rrsl,ave_rrst)
+#     def reducer_first(self,key,tuples):
+#         tuple_list = list(tuples)
+#         ratio_list = [tuple_list[i][0] for i in range(len(tuple_list))]
+#         rrsl_list = [tuple_list[i][1] for i in range(len(tuple_list))]
+#         rrst_list = [tuple_list[i][2] for i in range(len(tuple_list))]
+#         ave_ratio = sum(ratio_list)/len(ratio_list)
+#         ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
+#         ave_rrst  = sum(rrst_list)/len(rrst_list)
+#         if key[0] in income_class:
+#             yield (key[1],key[2],key[3],income_class[key[0]]),(ave_ratio,ave_rrsl,ave_rrst)
                    
-    def reducer_further(self,key,tuples):
-        tuple_list = list(tuples)
-        ratio_list = [tuple_list[i][0] for i in range(len(tuple_list))]
-        rrsl_list = [tuple_list[i][1] for i in range(len(tuple_list))]
-        rrst_list = [tuple_list[i][2] for i in range(len(tuple_list))]
-        ave_ratio = sum(ratio_list)/len(ratio_list)
-        ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
-        ave_rrst  = sum(rrst_list)/len(rrst_list)
-        #key [0], key[1], key[2] are year, pick_up and drop_off respectively
-        yield (key[0],key[1],key[2]),(key[3],ave_ratio,ave_rrsl,ave_rrst)
+#     def reducer_further(self,key,tuples):
+#         tuple_list = list(tuples)
+#         ratio_list = [tuple_list[i][0] for i in range(len(tuple_list))]
+#         rrsl_list = [tuple_list[i][1] for i in range(len(tuple_list))]
+#         rrst_list = [tuple_list[i][2] for i in range(len(tuple_list))]
+#         ave_ratio = sum(ratio_list)/len(ratio_list)
+#         ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
+#         ave_rrst  = sum(rrst_list)/len(rrst_list)
+#         #key [0], key[1], key[2] are year, pick_up and drop_off respectively
+#         yield (key[0],key[1],key[2]),(key[3],ave_ratio,ave_rrsl,ave_rrst)
         
-    def reducer_final(self,key,ratio_tuple):
-        ratio_tuple_list = list(ratio_tuple)
-        if len(ratio_tuple_list)==2:
-            if ratio_tuple_list[0][0]==1:
-                yield (key[0],key[1],key[2]),(ratio_tuple_list[0][1]-ratio_tuple_list[1][1],\
-                       ratio_tuple_list[0][2]-ratio_tuple_list[1][2],\
-                       ratio_tuple_list[0][3]-ratio_tuple_list[1][3])
-            else:
-                yield (key[0],key[1],key[2]),(ratio_tuple_list[1][1]-ratio_tuple_list[0][1],\
-                       ratio_tuple_list[1][2]-ratio_tuple_list[0][2],\
-                       ratio_tuple_list[1][3]-ratio_tuple_list[0][3])
+#     def reducer_final(self,key,ratio_tuple):
+#         ratio_tuple_list = list(ratio_tuple)
+#         if len(ratio_tuple_list)==2:
+#             if ratio_tuple_list[0][0]==1:
+#                 yield (key[0],key[1],key[2]),(ratio_tuple_list[0][1]-ratio_tuple_list[1][1],\
+#                        ratio_tuple_list[0][2]-ratio_tuple_list[1][2],\
+#                        ratio_tuple_list[0][3]-ratio_tuple_list[1][3])
+#             else:
+#                 yield (key[0],key[1],key[2]),(ratio_tuple_list[1][1]-ratio_tuple_list[0][1],\
+#                        ratio_tuple_list[1][2]-ratio_tuple_list[0][2],\
+#                        ratio_tuple_list[1][3]-ratio_tuple_list[0][3])
         
-    def steps(self):
-        return [MRStep(mapper=self.mapper_first,
-                       reducer=self.reducer_first),
-                MRStep(reducer=self.reducer_further),
-                MRStep(reducer=self.reducer_final)
-                ]    
+#     def steps(self):
+#         return [MRStep(mapper=self.mapper_first,
+#                        reducer=self.reducer_first),
+#                 MRStep(reducer=self.reducer_further),
+#                 MRStep(reducer=self.reducer_final)
+#                 ]    
                 
 
                 
