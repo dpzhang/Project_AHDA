@@ -13,7 +13,7 @@ from mrjob.step import MRStep
 income_dict={}
 income_class={}
 
-class MRIncomeDiff(MRJob):
+class MRWeekdayDiff(MRJob):
 
     def mapper(self,_,line):
         rlist = line.split(',')
@@ -94,4 +94,4 @@ class MRIncomeDiff(MRJob):
                 ]
                 
 if __name__ == '__main__':
-    MRIncomeDiff.run()
+    MRWeekdayDiff.run()
