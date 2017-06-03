@@ -18,6 +18,10 @@ class MRIncomeAnnual(MRJob):
     
     def mapper_first(self,_,line):
         rlist = line.split(',')
+        try:
+            total = float(rlist[14])
+        except:
+            total = 0
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
         total = float(rlist[14])
@@ -48,6 +52,10 @@ class MRIncomeDiff(MRJob):
     
     def mapper_first(self,_,line):
         rlist = line.split(',')
+        try:
+            total = float(rlist[14])
+        except:
+            total = 0
         
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
