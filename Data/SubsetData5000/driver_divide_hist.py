@@ -54,13 +54,18 @@ class MRIncomeDiff(MRJob):
     
     def mapper_first(self,_,line):
         rlist = line.split(',')
-        
+        try:
+            actual_dist = float(rlist[5])
+            ab_dist = float(rlist[27])
+        except:
+            actual_dist = 0.0
+            ab_dist = 0.0
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
         pick_up = rlist[25]
         drop_off = rlist[26]
-        actual_dist = float(rlist[5])
-        ab_dist = float(rlist[27])
+        #actual_dist = float(rlist[5])
+        #ab_dist = float(rlist[27])
         rrsl = rlist[28]
         rrst = rlist[31]
         #print(rrsl)
@@ -119,19 +124,19 @@ if __name__ == '__main__':
     log_income = np.log(income_list+0.02)
     mean_income = np.mean(log_income)
     std_income = np.std(log_income)
-    plt.style.use('ggplot')
-    weights = (1/log_income.shape[0]) * np.ones_like(log_income)
-    plt.hist(log_income, bins = 500, color = 'r', weights = weights)
-    plt.title("Distribution of Chicago taxi driver's annual income (log)")
-    plt.xlabel('Incomes')
-    plt.ylabel('Counts')
-    plt.axvline(x = mean_income, color = 'black', label = 'mean: ' + str(round(mean_income,4)))
-    plt.axvline(x = mean_income + 2 * std_income, linestyle = "--", color = 'green', label = '2SD: ' + str(round(mean_income + 2 * std_income, 4)))
+    #plt.style.use('ggplot')
+    #weights = (1/log_income.shape[0]) * np.ones_like(log_income)
+    #plt.hist(log_income, bins = 500, color = 'r', weights = weights)
+    #plt.title("Distribution of Chicago taxi driver's annual income (log)")
+    #plt.xlabel('Incomes')
+    #plt.ylabel('Counts')
+    #plt.axvline(x = mean_income, color = 'black', label = 'mean: ' + str(round(mean_income,4)))
+    #plt.axvline(x = mean_income + 2 * std_income, linestyle = "--", color = 'green', label = '2SD: ' + str(round(mean_income + 2 * std_income, 4)))
     #print(max(income_list))
-    plt.xlim([0,10])
-    plt.legend()
-    plt.savefig('temp.png')
-    plt.close()
+    #plt.xlim([0,10])
+    #plt.legend()
+    #plt.savefig('temp.png')
+    #plt.close()
 
 
 
