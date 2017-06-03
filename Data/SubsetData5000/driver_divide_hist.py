@@ -21,11 +21,12 @@ class MRIncomeAnnual(MRJob):
         try:
             total = float(rlist[14])
         except:
-            total = 0
+            total = None
         taxi_id = rlist[1]
         year = rlist[2].split('-')[0]
         #total = float(rlist[14])
-        yield (taxi_id,year),total
+        if total != None:
+            yield (taxi_id,year),total
 
     def combiner_first(self,key,fares):
         yield key,sum(fares)
