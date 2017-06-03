@@ -65,7 +65,7 @@ staxi['AbsDistance'] = get_distance(staxi.pickup_centroid, staxi.dropoff_centroi
 ##### 4. ratio of real (actual) path length over shortest path length (RRSL)#####
 # explanation: dividing actual distance by absolute distance
 staxi['RRSL'] = staxi['miles'] / staxi['AbsDistance']
-staxi['RRSL'] = staxi['RRSL'].apply(lambda: x: round(x,3))
+staxi['RRSL'] = staxi['RRSL'].apply(lambda x: round(x,3))
 #staxi['RRSL'] = round(staxi['miles'] / staxi['AbsDistance'], 3)
 
 ##### 5. Actual Velocity: Actual Distance / Trip Duration #####
@@ -86,10 +86,10 @@ staxi['AvgVelocity'] = 23.7
 
 ##### 6. Ratio of real path travel time over shortest path travel time (RRST) #####
 staxi['AbsTime'] = staxi['AbsDistance'] / staxi['AvgVelocity']
-staxi['AbsTime']  = staxi['AbsTime'].apply(lambda: x: round(x,3))
+staxi['AbsTime']  = staxi['AbsTime'].apply(lambda x: round(x,3))
 
 staxi['RRST'] = staxi['seconds'] / staxi['AbsTime']
-staxi['RRST'] = staxi['RRST'].apply(lambda: x: round(x,3))
+staxi['RRST'] = staxi['RRST'].apply(lambda x: round(x,3))
 
 #staxi['AbsTime'] = round(staxi['AbsDistance'] / staxi['AvgVelocity'] * 3600, 3)
 #staxi['RRST'] = round(staxi['seconds'] / staxi['AbsTime'], 3)
