@@ -41,7 +41,7 @@ class MRIncomeAnnual(MRJob):
         f_total = sum(f_list)
         average = f_total/n_year
         income_dict[key]=average
-        #yield key, average
+        yield key, average
     
     def steps(self):
         return [MRStep(mapper=self.mapper_first,
