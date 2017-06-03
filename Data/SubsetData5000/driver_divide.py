@@ -192,11 +192,12 @@ class MRTimePeriodDiff(MRJob):
         ab_dist = float(rlist[27])
         rrsl = rlist[28]
         rrst = rlist[31]
+        period = rlist[32]
         #print(rrsl)
         #print(type(rrsl))
         #print(rrst)
         if actual_dist!=0.0 and ab_dist!=0.0 and rrst!='':
-            yield (taxi_id,year,pick_up,drop_off), (actual_dist/ab_dist,float(rrsl),float(rrst))
+            yield (taxi_id,year,period), (actual_dist/ab_dist,float(rrsl),float(rrst))
         
     
     def reducer_first(self,key,tuples):
@@ -208,7 +209,7 @@ class MRTimePeriodDiff(MRJob):
         ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
         ave_rrst  = sum(rrst_list)/len(rrst_list)
         if key[0] in income_class:
-            yield (key[1],key[2],key[3],income_class[key[0]]),(ave_ratio,ave_rrsl,ave_rrst)
+            yield (key[1],key[2],income_class[key[0]]),(ave_ratio,ave_rrsl,ave_rrst)
                    
     def reducer_further(self,key,tuples):
         tuple_list = list(tuples)
@@ -218,18 +219,18 @@ class MRTimePeriodDiff(MRJob):
         ave_ratio = sum(ratio_list)/len(ratio_list)
         ave_rrsl  = sum(rrsl_list)/len(rrsl_list)
         ave_rrst  = sum(rrst_list)/len(rrst_list)
-        #key [0], key[1], key[2] are year, pick_up and drop_off respectively
-        yield (key[0],key[1],key[2]),(key[3],ave_ratio,ave_rrsl,ave_rrst)
+        #key [0], key[1] are year time_period respectively
+        yield (key[0],key[1]),(key[2],ave_ratio,ave_rrsl,ave_rrst)
         
     def reducer_final(self,key,ratio_tuple):
         ratio_tuple_list = list(ratio_tuple)
         if len(ratio_tuple_list)==2:
             if ratio_tuple_list[0][0]==1:
-                yield (key[0],key[1],key[2]),(ratio_tuple_list[0][1]-ratio_tuple_list[1][1],\
+                yield (key[0],key[1]),(ratio_tuple_list[0][1]-ratio_tuple_list[1][1],\
                        ratio_tuple_list[0][2]-ratio_tuple_list[1][2],\
                        ratio_tuple_list[0][3]-ratio_tuple_list[1][3])
             else:
-                yield (key[0],key[1],key[2]),(ratio_tuple_list[1][1]-ratio_tuple_list[0][1],\
+                yield (key[0],key[1]),(ratio_tuple_list[1][1]-ratio_tuple_list[0][1],\
                        ratio_tuple_list[1][2]-ratio_tuple_list[0][2],\
                        ratio_tuple_list[1][3]-ratio_tuple_list[0][3])
         
@@ -245,7 +246,7 @@ class MRTimePeriodDiff(MRJob):
                 
 if __name__ == '__main__':
     MRIncomeAnnual.run()
-#    income_list = np.array(list(income_dict.values()))
+    income_list = np.array(list(income_dict.values()))
 #    plt.hist(income_list,1000)
     #print(max(income_list))
 #    plt.xlim([0,1000])
@@ -259,8 +260,8 @@ if __name__ == '__main__':
         if dmean-2*ddev<=np.log(income_dict[dID]+0.02)<=dmean+2*ddev:
             income_class[dID] = 0
     #print(sum(income_class.values()))
-    MRIncomeDiff.run()
+    #MRIncomeDiff.run()
     #MRWeekdayDiff.run()
-    #MRTimePeriodDiff.run()
+    MRTimePeriodDiff.run()
     
          
