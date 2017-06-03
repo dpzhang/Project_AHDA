@@ -31,7 +31,8 @@ class MRIncomeAnnual(MRJob):
         yield key,sum(fares)
         
     def reducer_first(self,key,fares):
-        yield key[0],sum(fares)
+        id, year = key
+        yield id,sum(fares)
     
     def reducer_final(self,key,fares):
         f_list = list(fares)
