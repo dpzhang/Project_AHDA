@@ -16,6 +16,8 @@ if __name__ == "__main__":
     output_path = os.path.join(os.pardir, "Data/SubsetData5000/CSTaxiTrips.csv")
     staxi = clean_data(staxi_path) 
 
+    # there are cases where the observation has 
+
     
     ##### 1. pickup region based on community #####
     staxi['pickup_region'] = staxi.pickup_area.apply(get_region)

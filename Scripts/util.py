@@ -13,6 +13,13 @@ import os
 import re
 from geopy.distance import vincenty
 from geopy.distance import great_circle
+import datetime
+import fiona
+import shapely
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+import string
+
 
 def get_fare(a_string):
     '''
@@ -25,7 +32,7 @@ def get_fare(a_string):
     Example: "$23.34" to float(23.34)
     --------------------------------------------------------------------
     ''' 
-    if pd.isnull(a_string):
+    if a_string == '':
         return 0
     else:
         list_of_num =re.findall('\d+', a_string)
@@ -45,16 +52,20 @@ def get_centroid(a_string):
     
     Example: "POINT (21.231431 29.3242463)" to (21.231431, 29.3242463) 
     --------------------------------------------------------------------
-    ''' 
-    if pd.isnull(a_string):
-        return 0, 0
-    else:
-        centroid = re.findall('(\-*\d+\.\d+)', a_string)
-        if not centroid: # if list is emppty
-            return (0, 0)
+    '''
+    try: 
+        if a_string == '':
+            return 0, 0
         else:
-            longitude, latitude = centroid
-            return float(latitude), float(longitude)
+            centroid = re.findall('(\-*\d+\.\d+)', a_string)
+            if not centroid: # if list is emppty
+                return 0, 0
+            else:
+                longitude, latitude = centroid
+                return float(latitude), float(longitude)
+    except ValueError:
+        print('WTH coordinate')
+        print(a_string)
 
 
 def clean_census(a_float):
@@ -74,6 +85,23 @@ def clean_census(a_float):
     else:
         return int(a_float) 
     
+
+def get_time(a_string):
+    try:
+        string_parser = "%m/%d/%y  %H:%M"
+        datetime_object = datetime.datetime.strptime(a_string, string_parser)
+        datetime_format = datetime.datetime.strftime(datetime_object, string_parser)
+        return datetime_object, datetime_format
+    #except ValueError:
+    #    string_parser = "%m/%d/%y %H%M"
+    #    datetime_object = datetime.datetime.strptime(a_string, string_parser)
+    #    datetime_format = datetime.datetime.strftime(datetime_object, string_parser)
+    #    return datetime_format
+    except ValueError:
+        print('Wrong format')
+
+      
+
 
 def clean_data(input_file_name, output = False, \
                output_file_name = 'clean_taxi.csv'):
@@ -158,25 +186,22 @@ def get_region(community_id):
             CommunityOnRegion[community] = region_name
 
     if pd.isnull(community_id):
-        return 'None'
+        return 'Outside'
     else: 
         return CommunityOnRegion[int(community_id)]
 
 
 # unit: mile
-def get_distance(origin_col, destination_col, vincenty_distance = True):
+def get_distance(origin, destination, vincenty_distance = True):
     '''
     Vincenty's formula is doubles the calculation time compared to 
     great-circle, but its accuracy gain at the point tested is ~0.17%
     '''
-    absolute_distance = []
-    for origin, destination in zip(origin_col, destination_col):
-        if vincenty_distance:
-            distance = vincenty(origin, destination).miles
-        else:
-            distance = great_circle(origin, destination).miles
-        absolute_distance.append(round(distance, 3))       
-    return absolute_distance
+    if vincenty_distance:
+        distance = vincenty(origin, destination).miles
+    else:
+        distance = great_circle(origin, destination).miles
+    return distance
 
 
 def get_timePeriod(timestamp):
@@ -227,3 +252,21 @@ def get_month(timestamp):
 
 def get_day(timestamp):
     return timestamp.day
+
+
+def get_community(coordinate):
+    shp_file_vm = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_96616a78-3bcd-4822-be67-fc56301ad13b.shp"
+    shp_file_local = "/Users/dongpingzhang/Google Drive/spring2017/macs30200/MACS30200proj/FinalPaper/Data/boundary_files/neighborhood_boundaries/geo_export_96616a78-3bcd-4822-be67-fc56301ad13b.shp"
+    with fiona.open(shp_file_local) as fiona_collection:
+        for i in fiona_collection:
+            shape = i['geometry']['coordinates'][0]
+            if len(shape) == 1:
+                shape = shape[0]
+            polygon = Polygon(shape)
+
+            com = int(i['properties']['area_numbe'])
+            lon, lat = coordinate
+            point = Point(lat, lon)
+            if polygon.contains(point):
+                return com
+    return 0
