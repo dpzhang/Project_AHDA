@@ -3,8 +3,9 @@ The University of Chicago
 CAPP30123: Final Project
 Python Version: 3.5
 Seed: None
+Author: @dpzhang
 
-I. Cleaning Data: Loading and cleaning raw taxi trip data
+I. Helper functions to clean dirty asf taxi trips data
 '''
 
 import pandas as pd
@@ -35,8 +36,9 @@ def get_fare(a_string):
     try:
         if a_string[0] == '$':
             list_of_num =re.findall('\d+', a_string)
-            numerized_fare = float('.'.join(list_of_num))
-            return numerized_fare
+            if len(list_of_num) != 0:
+                numerized_fare = float('.'.join(list_of_num))
+                return numerized_fare
     except ValueError:
         pass
 
@@ -94,7 +96,7 @@ def get_RRSL(miles, AbsDistance):
         if miles != 0 and AbsDistance != 0:
             RRSL = miles / AbsDistance
             if RRSL < 1:
-                RRSL = 1
+                RRSL = -1
             return RRSL
     except (ValueError, TypeError):
         pass
@@ -113,7 +115,7 @@ def get_RRST(seconds, AbsTime):
         if seconds != 0 and AbsTime != 0:
             RRST = seconds / AbsTime
             if RRST < 1:
-                RRST = 1
+                RRST = -1
             return RRST
     except (ValueError, TypeError):
         pass
@@ -240,10 +242,11 @@ def get_latlon(centroid):
         
 
 def get_community(coordinate):
-    shp_file_vm = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_96616a78-3bcd-4822-be67-fc56301ad13b.shp"
-    shp_file_local = "/Users/dongpingzhang/Google Drive/spring2017/macs30200/MACS30200proj/FinalPaper/Data/boundary_files/neighborhood_boundaries/geo_export_96616a78-3bcd-4822-be67-fc56301ad13b.shp"
+    pro_dir = os.path.dirname(os.path.dirname(__file__))
+    shp_path = "Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"
+    shp_file = os.path.join(pro_dir, shp_path)
     try:
-        with fiona.open(shp_file_local) as fiona_collection:
+        with fiona.open(shp_file) as fiona_collection:
             for i in fiona_collection:
                 shape = i['geometry']['coordinates'][0]
                 if len(shape) == 1:

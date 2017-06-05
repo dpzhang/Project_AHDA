@@ -1,3 +1,13 @@
+'''
+The University of Chicago 
+CAPP30123: Final Project
+Python Version: 3.5
+Seed: None
+Author: @dpzhang
+
+I. MRjob to produce a clean script
+'''
+
 from mrjob.job import MRJob
 from util import *
 
@@ -5,7 +15,6 @@ class MRCleanAndCreate(MRJob):
 
     def mapper(self, _, line):
         all_cols = np.array(line.split(','))
-        info_cols = np.array(range(24))
         
         # label all elements in one rolumn
         index, trip_id, taxi_id, \
@@ -16,7 +25,7 @@ class MRCleanAndCreate(MRJob):
         fare, tips, tolls, extras, total,\
         payment,company, \
         pickup_latitude, pickup_longitude, pickup_centroid, \
-        dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols[info_cols]
+        dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
 
         # choose to ignore the whole observation if:
             # 1. taxi_id == ''
@@ -131,25 +140,23 @@ class MRCleanAndCreate(MRJob):
             pickup_lat, pickup_lon = get_latlon(pickup_centroid)
             dropoff_lat, dropoff_lon = get_latlon(dropoff_centroid)
 
-            info = [taxi_id, \
-                    pickup_time, dropoff_time, \
-                    seconds, miles, \
-                    pickup_area, dropoff_area, pickup_region, dropoff_region,\
-                    pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, \
-                    fare, tips, tolls, extras, total, \
-                    AbsDistance, RRSL, AbsTime, RRST, \
-                    pickup_hr, weekday, year, month, day]             
-                
-            yield [trip_id, info], None
-            
+            if RRSL != -1 and RRST != -1 and RRSL != None and RRST != None:
 
-        
+                info = [taxi_id, \
+                        pickup_time, dropoff_time, \
+                        seconds, miles, \
+                        pickup_area, dropoff_area, pickup_region, dropoff_region,\
+                        pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, \
+                        fare, tips, tolls, extras, total, \
+                        AbsDistance, RRSL, AbsTime, RRST, \
+                        pickup_hr, weekday, year, month, day]               
+                info.insert(0, trip_id)
+                yield info, None
+            
 
     def reducer(self, trips, _):
         yield trips, None
 
+
 if __name__ == '__main__':
     MRCleanAndCreate.run()
-
-
-
