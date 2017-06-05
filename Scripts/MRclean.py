@@ -153,8 +153,8 @@ class MRCleanAndCreate(MRJob):
             pickup_lat, pickup_lon = get_latlon(pickup_centroid)
             dropoff_lat, dropoff_lon = get_latlon(dropoff_centroid)
 
-            if RRSL != -1 and RRST != -1 and RRSL != None and RRST != None:
-
+            if RRSL != -1 and RRST != -1 and RRSL != None and RRST != None and\
+               RRSL != 0 and RRST != 0:
                 info = [taxi_id, \
                         pickup_time, dropoff_time, \
                         seconds, miles, \
