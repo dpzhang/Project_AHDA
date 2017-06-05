@@ -13,7 +13,6 @@ import numpy as np
 import os
 import re
 from geopy.distance import vincenty
-from geopy.distance import great_circle
 import datetime
 import fiona
 import shapely
