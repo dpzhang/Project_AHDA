@@ -17,15 +17,28 @@ class MRCleanAndCreate(MRJob):
         all_cols = np.array(line.split(','))
         
         # label all elements in one rolumn
-        index, trip_id, taxi_id, \
-        pickup_time, dropoff_time, \
-        seconds, miles, \
-        pickup_census, dropoff_census, \
-        pickup_area, dropoff_area, \
-        fare, tips, tolls, extras, total,\
-        payment,company, \
-        pickup_latitude, pickup_longitude, pickup_centroid, \
-        dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
+        if len(all_cols) == 24:
+            index, trip_id, taxi_id, \
+            pickup_time, dropoff_time, \
+            seconds, miles, \
+            pickup_census, dropoff_census, \
+            pickup_area, dropoff_area, \
+            fare, tips, tolls, extras, total,\
+            payment,company, \
+            pickup_latitude, pickup_longitude, pickup_centroid, \
+            dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
+        
+
+        if len(all_cols) == 23:
+            trip_id, taxi_id, \
+            pickup_time, dropoff_time, \
+            seconds, miles, \
+            pickup_census, dropoff_census, \
+            pickup_area, dropoff_area, \
+            fare, tips, tolls, extras, total,\
+            payment,company, \
+            pickup_latitude, pickup_longitude, pickup_centroid, \
+            dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
 
         # choose to ignore the whole observation if:
             # 1. taxi_id == ''
