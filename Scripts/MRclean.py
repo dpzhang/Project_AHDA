@@ -165,7 +165,6 @@ class MRCleanAndCreate(MRJob):
                             AbsDistance, RRSL, AbsTime, RRST, \
                             pickup_hr, weekday, year, month, day]               
                     info.insert(0, trip_id)
-                    print(info)
                     yield info, None
         except (ValueError, TypeError, UnboundLocalError):
             pass
