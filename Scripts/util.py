@@ -1,4 +1,4 @@
-'''python3 taskx.py --jobconf mapreduce.job.reduces=1 data.csv
+'''
 The University of Chicago 
 CAPP30123: Final Project
 Python Version: 3.5
