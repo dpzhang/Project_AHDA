@@ -238,9 +238,7 @@ def get_latlon(centroid):
         
 
 def get_community(coordinate):
-    pro_dir = os.path.dirname(os.path.dirname(__file__))
-    shp_path = "Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"
-    shp_file = os.path.join(pro_dir, shp_path)
+    shp_file = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"   
     try:
         with fiona.open(shp_file) as fiona_collection:
             for i in fiona_collection:
@@ -266,7 +264,7 @@ class MRCleanAndCreate(MRJob):
         try:
             # label all elements in one rolumn
             #if len(all_cols) == 24:
-            trip_id, taxi_id, \
+            index, trip_id, taxi_id, \
             pickup_time, dropoff_time, \
             seconds, miles, \
             pickup_census, dropoff_census, \
