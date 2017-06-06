@@ -383,7 +383,7 @@ class MRCleanAndCreate(MRJob):
             fare, tips, tolls, extras, total,\
             payment,company, \
             pickup_latitude, pickup_longitude, pickup_centroid, \
-            dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
+            dropoff_latitude, dropoff_longitude, dropoff_centroid, error = all_cols
 
             # choose to ignore the whole observation if:
                 # 1. taxi_id == ''
