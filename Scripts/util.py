@@ -31,11 +31,10 @@ def get_fare(a_string):
     --------------------------------------------------------------------
     ''' 
     try:
-        if a_string[0] == '$':
-            list_of_num =re.findall('\d+', a_string)
-            if len(list_of_num) != 0:
-                numerized_fare = float('.'.join(list_of_num))
-                return numerized_fare
+        list_of_num =re.findall('\d+', a_string)
+        if len(list_of_num) != 0:
+            numerized_fare = float('.'.join(list_of_num))
+            return numerized_fare
     except ValueError:
         pass
 

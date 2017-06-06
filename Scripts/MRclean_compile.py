@@ -5,7 +5,7 @@ Python Version: 3.5
 Seed: None
 Author: @dpzhang
 
-I. MRjob to produce a clean script
+I. MRjob to produce a clean dataset
 '''
 
 from mrjob.job import MRJob
@@ -14,7 +14,6 @@ import os
 import re
 from geopy.distance import vincenty
 import datetime
-#import fiona
 import shapely
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
@@ -33,11 +32,10 @@ def get_fare(a_string):
     --------------------------------------------------------------------
     ''' 
     try:
-        if a_string[0] == '$':
-            list_of_num =re.findall('\d+', a_string)
-            if len(list_of_num) != 0:
-                numerized_fare = float('.'.join(list_of_num))
-                return numerized_fare
+        list_of_num =re.findall('\d+', a_string)
+        if len(list_of_num) != 0:
+            numerized_fare = float('.'.join(list_of_num))
+            return numerized_fare
     except ValueError:
         pass
 
@@ -78,11 +76,13 @@ def get_time(a_string):
             except ValueError:
                 pass
 
+
 def get_seconds(a_string):
     try:
         return int(a_string)
     except (ValueError, TypeError):
         pass
+
 
 def get_miles(a_string):
     try:
@@ -90,6 +90,7 @@ def get_miles(a_string):
     except (ValueError, TypeError):
         pass
         
+
 def get_RRSL(miles, AbsDistance):
     try:
         if miles != 0 and AbsDistance != 0:
@@ -108,6 +109,7 @@ def get_AbsTime(AbsDistance):
             return AbsTime
     except (ValueError, TypeError):
         pass
+
 
 def get_RRST(seconds, AbsTime):
     try:
@@ -223,11 +225,13 @@ def get_day(timestamp):
     except (ValueError, TypeError):
         pass
 
+
 def get_area(a_string):
     try:
         return int(a_string)
     except (ValueError, TypeError):
         pass
+
 
 def get_latlon(centroid):
     try:
@@ -236,24 +240,6 @@ def get_latlon(centroid):
     except (ValueError, TypeError):
         return None, None
         
-
-#def get_community(coordinate):
-#    shp_file = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"   
-#    try:
-#        with fiona.open(shp_file) as fiona_collection:
-#            for i in fiona_collection:
-#                shape = i['geometry']['coordinates'][0]
-#                if len(shape) == 1:
-#                    shape = shape[0]
-#                polygon = Polygon(shape)
-#
-#                com = int(i['properties']['area_numbe'])
-#                lon, lat = coordinate
-#                point = Point(lat, lon)
-#                if polygon.contains(point):
-#                    return com
-#    except (ValueError, TypeError):
-#        pass
 
 def get_community(a_string):
     try:
@@ -269,8 +255,7 @@ class MRCleanAndCreate(MRJob):
         all_cols = np.array(line.split(','))
         try:
             # label all elements in one rolumn
-            #if len(all_cols) == 24:
-            index, trip_id, taxi_id, \
+            trip_id, taxi_id, \
             pickup_time, dropoff_time, \
             seconds, miles, \
             pickup_census, dropoff_census, \
@@ -279,18 +264,6 @@ class MRCleanAndCreate(MRJob):
             payment,company, \
             pickup_latitude, pickup_longitude, pickup_centroid, \
             dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
-            #elif len(all_cols) == 23:
-            #    trip_id, taxi_id, \
-            #    pickup_time, dropoff_time, \
-            #    seconds, miles, \
-            #    pickup_census, dropoff_census, \
-            #    pickup_area, dropoff_area, \
-            #    fare, tips, tolls, extras, total,\
-            #    payment,company, \
-            #    pickup_latitude, pickup_longitude, pickup_centroid, \
-            #    dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
-            #else:
-            #    pass
 
             # choose to ignore the whole observation if:
                 # 1. taxi_id == ''
@@ -310,96 +283,47 @@ class MRCleanAndCreate(MRJob):
                 if dropoff_time != '':
                     dropoff_timeobject = get_time(dropoff_time)[0]
                     dropoff_time = get_time(dropoff_time)[1]
-                #print('pickup time', pickup_time)                
-                #print()
-                #print('dropoff time', dropoff_time)
-                #print()
                 #############################################################
 
                 seconds = get_seconds(seconds)
-                #print('seconds', seconds)
-                #print()
 
                 # convert miles (miles column has no NAs)
                 miles = get_miles(miles)
-                #print('miles', miles)
-                #print()
 
                 # process all money columns: fare, tips, tolls, extras, total
                 fare = get_fare(fare)
-                #print('fare', fare)
-                #print()
                 tips = get_fare(tips)
-                #print('tips', tips)
-                #print()
                 tolls = get_fare(tolls)
-                #print('tolls', tolls)
-                #print()
                 extras = get_fare(extras)
-                #print('extras', extras)
-                #print()
                 total = get_fare(total)
-                #print('total', total)
-                #print()
 
                 # fill in missing pick up community information
                 pickup_centroid = get_centroid(pickup_centroid)
                 pickup_area = get_community(pickup_area)
-                #pickup_manual = get_community(pickup_centroid)
-                #if pickup_manual != pickup_area:
-                #    pickup_area = get_area(pickup_area)
-                #print('pickup raw', pickup_area)
-                #print('pickup manual', pickup_manual)
-                #print('final pickup area', pickup_area)
-                #print()
 
                 # fill in missing dropoff community information            
                 dropoff_centroid = get_centroid(dropoff_centroid)
                 dropoff_area = get_community(dropoff_area)
-                #dropoff_manual = get_community(dropoff_centroid)
-                #if dropoff_manual != dropoff_area:
-                #    dropoff_area = get_area(dropoff_area)
-                #print('dropoff raw', dropoff_area)
-                #print('dropoff manual', dropoff_manual)
-                #print('final dropoff area', dropoff_area)
-                #print()
 
             ######################################################################
                 AbsDistance = get_distance(pickup_centroid, dropoff_centroid)
-                #print(AbsDistance)
-                #print('AbsDistance', AbsDistance)
-                #print()
 
                 RRSL = get_RRSL(miles, AbsDistance)
-                #print('RRSL', RRSL)
-                #print()
                 
                 AvgVelocity = 23.7
                 AbsTime = get_AbsTime(AbsDistance)
 
                 RRST = get_RRST(seconds, AbsTime)
-                #print('RRST', RRST)
-                #print()
 
-                #print(pickup_time)
-                #print(type(pickup_time))
                 pickup_hr = get_timePeriod(pickup_timeobject)
                 
                 weekday = get_weekday(pickup_timeobject)
-                #print('weekday')
-                #print(weekday)
 
                 year = get_year(pickup_timeobject)
-                #print('year')
-                #print(year)
 
                 month = get_month(pickup_timeobject)
-                #print('month')
-                #print(month)
 
                 day = get_day(pickup_timeobject)
-                #print('day')
-                #print(day)
                     
                 pickup_region = get_region(pickup_area)
                 dropoff_region = get_region(pickup_area)
