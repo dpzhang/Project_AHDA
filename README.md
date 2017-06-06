@@ -14,7 +14,7 @@ This repository contains the final course project for CAPP 30123.
 <code>LitReview</code>: contains literature reviews for the project.
 
 <code>ProjectInfo</code>: contains project proposal, presentation slides, and 
-description files. 
+final project. 
 
 <code>Scripts</code>: contains scripts for the project. 
 
