@@ -9,6 +9,16 @@ I. MRjob to produce a clean script
 '''
 
 from mrjob.job import MRJob
+import numpy as np
+import os
+import re
+from geopy.distance import vincenty
+import datetime
+import fiona
+import shapely
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+import string
 from util import *
 
 
@@ -29,18 +39,6 @@ class MRCleanAndCreate(MRJob):
             payment,company, \
             pickup_latitude, pickup_longitude, pickup_centroid, \
             dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
-            #elif len(all_cols) == 23:
-            #    trip_id, taxi_id, \
-            #    pickup_time, dropoff_time, \
-            #    seconds, miles, \
-            #    pickup_census, dropoff_census, \
-            #    pickup_area, dropoff_area, \
-            #    fare, tips, tolls, extras, total,\
-            #    payment,company, \
-            #    pickup_latitude, pickup_longitude, pickup_centroid, \
-            #    dropoff_latitude, dropoff_longitude, dropoff_centroid = all_cols
-            #else:
-            #    pass
 
             # choose to ignore the whole observation if:
                 # 1. taxi_id == ''
@@ -67,87 +65,48 @@ class MRCleanAndCreate(MRJob):
                 #############################################################
 
                 seconds = get_seconds(seconds)
-                #print('seconds', seconds)
-                #print()
 
                 # convert miles (miles column has no NAs)
                 miles = get_miles(miles)
-                #print('miles', miles)
-                #print()
 
                 # process all money columns: fare, tips, tolls, extras, total
                 fare = get_fare(fare)
-                #print('fare', fare)
-                #print()
                 tips = get_fare(tips)
-                #print('tips', tips)
-                #print()
                 tolls = get_fare(tolls)
-                #print('tolls', tolls)
-                #print()
                 extras = get_fare(extras)
-                #print('extras', extras)
-                #print()
                 total = get_fare(total)
-                #print('total', total)
-                #print()
 
                 # fill in missing pick up community information
                 pickup_centroid = get_centroid(pickup_centroid)
                 pickup_manual = get_community(pickup_centroid)
                 if pickup_manual != pickup_area:
                     pickup_area = get_area(pickup_area)
-                #print('pickup raw', pickup_area)
-                #print('pickup manual', pickup_manual)
-                #print('final pickup area', pickup_area)
-                #print()
 
                 # fill in missing dropoff community information            
                 dropoff_centroid = get_centroid(dropoff_centroid)
                 dropoff_manual = get_community(dropoff_centroid)
                 if dropoff_manual != dropoff_area:
                     dropoff_area = get_area(dropoff_area)
-                #print('dropoff raw', dropoff_area)
-                #print('dropoff manual', dropoff_manual)
-                #print('final dropoff area', dropoff_area)
-                #print()
 
             ######################################################################
                 AbsDistance = get_distance(pickup_centroid, dropoff_centroid)
-                #print(AbsDistance)
-                #print('AbsDistance', AbsDistance)
-                #print()
 
                 RRSL = get_RRSL(miles, AbsDistance)
-                #print('RRSL', RRSL)
-                #print()
                 
                 AvgVelocity = 23.7
                 AbsTime = get_AbsTime(AbsDistance)
 
                 RRST = get_RRST(seconds, AbsTime)
-                #print('RRST', RRST)
-                #print()
 
-                #print(pickup_time)
-                #print(type(pickup_time))
                 pickup_hr = get_timePeriod(pickup_timeobject)
                 
                 weekday = get_weekday(pickup_timeobject)
-                #print('weekday')
-                #print(weekday)
 
                 year = get_year(pickup_timeobject)
-                #print('year')
-                #print(year)
 
                 month = get_month(pickup_timeobject)
-                #print('month')
-                #print(month)
 
                 day = get_day(pickup_timeobject)
-                #print('day')
-                #print(day)
                     
                 pickup_region = get_region(pickup_area)
                 dropoff_region = get_region(pickup_area)
