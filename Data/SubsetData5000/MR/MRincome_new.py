@@ -14,7 +14,7 @@ class MRIncomeAnnual(MRJob):
     def mapper_first(self,_,line):
         rlist = line.split(',')
         taxi_id = rlist[1]
-        year = rlist[2].split('/')[2][:2]
+        year = rlist[2].split('/')[2][:4]
         total = float(rlist[18])
         if (taxi_id!=''):
             yield (taxi_id,year),total
