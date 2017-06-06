@@ -394,7 +394,7 @@ class MRCleanAndCreate(MRJob):
                miles != '0' or miles != '' or miles != '0 ' and \
                pickup_centroid != '' or dropoff_centroid != '' and \
                seconds != '' or seconds !='0':
-               
+
                 ################## Process Time Variables ####################
                 # process pickup_time, and dropoff_time
                 pickup_timeobject = get_time(pickup_time)[0]
