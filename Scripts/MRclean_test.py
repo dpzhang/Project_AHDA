@@ -375,7 +375,7 @@ class MRCleanAndCreate(MRJob):
         all_cols = np.array(line.split(','))
         try:
             # label all elements in one rolumn
-            trip_id, taxi_id, \
+            index, trip_id, taxi_id, \
             pickup_time, dropoff_time, \
             seconds, miles, \
             pickup_census, dropoff_census, \
