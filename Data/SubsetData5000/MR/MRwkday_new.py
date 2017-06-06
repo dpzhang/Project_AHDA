@@ -26,7 +26,7 @@ class MRWeekdayDiff(MRJob):
     def mapper(self,_,line):
         rlist = line.split(',')
         taxi_id = rlist[1]
-        year = '20'+rlist[2].split('/')[2][0:2]
+        year = '20'+rlist[2].split('/')[2][0:4]
         actual_dist = float(rlist[5])
         ab_dist = float(rlist[19])
         rrsl = rlist[20]

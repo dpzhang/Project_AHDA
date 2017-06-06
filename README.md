@@ -9,13 +9,16 @@ This repository contains the final course project for CAPP 30123.
 
 ## About all sub-directories:
 
-<code>Data</code>: contains a small subset data of 5000 rows of taxi trips for
-testing.
+<code>Data</code>: contains subset of our data and other datafile we use.
 
 <code>LitReview</code>: contains literature reviews for the project.
 
 <code>ProjectInfo</code>: contains project proposal, presentation slides, and 
-description files. 
+final project. 
+
+<code>Scripts</code>: contains scripts for the project. 
+
+<code>Testfile</code>: contains some testfiles we used. 
 
 ## Contributors
 **Alice Mee Seon Chung** [Alicechung](https://github.com/Alicechung)

@@ -25,7 +25,7 @@ class MRRegionDiff(MRJob):
     def mapper(self,_,line):
         rlist = line.split(',')
         taxi_id = rlist[1]
-        year = '20'+rlist[2].split('/')[2][0:2]
+        year = rlist[2].split('/')[2][0:4]
         pick_up = rlist[8]
         drop_off = rlist[9]
         actual_dist = float(rlist[5])
