@@ -14,7 +14,7 @@ import os
 import re
 from geopy.distance import vincenty
 import datetime
-import fiona
+#import fiona
 import shapely
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
@@ -237,24 +237,30 @@ def get_latlon(centroid):
         return None, None
         
 
-def get_community(coordinate):
-    shp_file = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"   
-    try:
-        with fiona.open(shp_file) as fiona_collection:
-            for i in fiona_collection:
-                shape = i['geometry']['coordinates'][0]
-                if len(shape) == 1:
-                    shape = shape[0]
-                polygon = Polygon(shape)
+#def get_community(coordinate):
+#    shp_file = "/mnt/storage/Project_AHDA/Data/community_boundaries/geo_export_13b0db68-db36-4972-ab88-61251d23f387.shp"   
+#    try:
+#        with fiona.open(shp_file) as fiona_collection:
+#            for i in fiona_collection:
+#                shape = i['geometry']['coordinates'][0]
+#                if len(shape) == 1:
+#                    shape = shape[0]
+#                polygon = Polygon(shape)
+#
+#                com = int(i['properties']['area_numbe'])
+#                lon, lat = coordinate
+#                point = Point(lat, lon)
+#                if polygon.contains(point):
+#                    return com
+#    except (ValueError, TypeError):
+#        pass
 
-                com = int(i['properties']['area_numbe'])
-                lon, lat = coordinate
-                point = Point(lat, lon)
-                if polygon.contains(point):
-                    return com
+def get_community(a_string):
+    try:
+        community = int(a_string)
+        return community
     except (ValueError, TypeError):
         pass
-
 
 class MRCleanAndCreate(MRJob):
 
@@ -338,9 +344,10 @@ class MRCleanAndCreate(MRJob):
 
                 # fill in missing pick up community information
                 pickup_centroid = get_centroid(pickup_centroid)
-                pickup_manual = get_community(pickup_centroid)
-                if pickup_manual != pickup_area:
-                    pickup_area = get_area(pickup_area)
+                pickup_area = get_community(pickup_area)
+                #pickup_manual = get_community(pickup_centroid)
+                #if pickup_manual != pickup_area:
+                #    pickup_area = get_area(pickup_area)
                 #print('pickup raw', pickup_area)
                 #print('pickup manual', pickup_manual)
                 #print('final pickup area', pickup_area)
@@ -348,9 +355,10 @@ class MRCleanAndCreate(MRJob):
 
                 # fill in missing dropoff community information            
                 dropoff_centroid = get_centroid(dropoff_centroid)
-                dropoff_manual = get_community(dropoff_centroid)
-                if dropoff_manual != dropoff_area:
-                    dropoff_area = get_area(dropoff_area)
+                dropoff_area = get_community(dropoff_area)
+                #dropoff_manual = get_community(dropoff_centroid)
+                #if dropoff_manual != dropoff_area:
+                #    dropoff_area = get_area(dropoff_area)
                 #print('dropoff raw', dropoff_area)
                 #print('dropoff manual', dropoff_manual)
                 #print('final dropoff area', dropoff_area)
