@@ -5,7 +5,7 @@ Python Version: 3.5
 Seed: None
 Author: @dpzhang
 
-I. MRjob to produce a clean dataset
+Script Objective: Use MRjob to produce a clean dataset
 '''
 
 from mrjob.job import MRJob
@@ -60,7 +60,17 @@ def get_centroid(a_string):
     except ValueError:
         pass   
 
+
 def get_time(a_string):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. convert time input, such as 'Pickup Timestamp' and 
+           'Dropoff Timesteamp' into a datatime object
+        2. Use the output file to get the Year, Day, Month, Day of the Week
+           of every single trip 
+    --------------------------------------------------------------------
+    '''
     if a_string != '':
         try:
             string_parser = "%m/%d/%y  %H:%M"
@@ -78,6 +88,12 @@ def get_time(a_string):
 
 
 def get_seconds(a_string):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. extract trip duration and convert it from a string to an integer
+    --------------------------------------------------------------------
+    '''
     try:
         return int(a_string)
     except (ValueError, TypeError):
@@ -85,13 +101,50 @@ def get_seconds(a_string):
 
 
 def get_miles(a_string):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. extract trip length and convert it from a string to a float
+    --------------------------------------------------------------------
+    '''
     try:
         return float(a_string)
     except (ValueError, TypeError):
         pass
         
 
+# unit: mile
+def get_distance(origin, destination):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Using origin and destination coordinates, compute the absolute
+           distance of each trip on the map (a straight line) using 
+           Vincenty's formula
+    
+    Note:
+    Vincenty's formula is doubles the calculation time compared to 
+    great-circle, but its accuracy gain at the point tested is ~0.17%
+    --------------------------------------------------------------------
+    '''
+    try:
+        return vincenty(origin, destination).miles
+    except (ValueError, TypeError):
+        pass
+
+
 def get_RRSL(miles, AbsDistance):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Compute RRSL by dividing miles (relative distance) by Absolute
+           distance on the map
+    
+    Interpretation:
+        For the shortest distance possible (a straight line on the map, 
+        how many extra mile would a driver take per mile on the map
+    --------------------------------------------------------------------
+    '''
     try:
         if miles != 0 and AbsDistance != 0:
             RRSL = miles / AbsDistance
@@ -103,6 +156,22 @@ def get_RRSL(miles, AbsDistance):
             
 
 def get_AbsTime(AbsDistance):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Compute absolute trip time by dividing miles Absolute distance
+           by average velocity
+    
+    Note:
+        Averaged velocity = 23.7
+        It is collected by Google and they averaged all speed limit signs
+        of Chicago to obtain this statistic
+    
+    Interpretation:
+        What is the shortest time for a driver to complete a trip given
+        origin and destination points
+    --------------------------------------------------------------------
+    '''
     try:
         if AbsDistance != 0:
             AbsTime = AbsDistance / 23.7 * 3600
@@ -112,6 +181,17 @@ def get_AbsTime(AbsDistance):
 
 
 def get_RRST(seconds, AbsTime):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Compute RRST by dividing actual trip duration (seconds) by 
+           absolute time required by a trip given origin and destination    
+
+    Interpretation:
+        How many extra seconds would a driver use per second of the shortest
+        trip duratiom
+    --------------------------------------------------------------------
+    '''
     try:
         if seconds != 0 and AbsTime != 0:
             RRST = seconds / AbsTime
@@ -123,6 +203,13 @@ def get_RRST(seconds, AbsTime):
            
 
 def get_region(community_id):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff community number, it would 
+           return the region information
+    --------------------------------------------------------------------
+    '''
     try:
         # create a dictionary
         community_on_region = {'Far North Side': [1, 77, 3, 2, 4, 13, 14, 12, 11, 10, 9, 76],
@@ -146,19 +233,16 @@ def get_region(community_id):
         pass
 
 
-# unit: mile
-def get_distance(origin, destination):
-    '''
-    Vincenty's formula is doubles the calculation time compared to 
-    great-circle, but its accuracy gain at the point tested is ~0.17%
-    '''
-    try:
-        return vincenty(origin, destination).miles
-    except (ValueError, TypeError):
-        pass
-
-
 def get_timePeriod(timestamp):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff timestamp, it would 
+           know the hour of the trip
+        2. Use the hour information, it would generate the correct
+           time interval of the trip
+    --------------------------------------------------------------------
+    '''
     try:
         hour = timestamp.hour
         if hour in [1, 2, 3]:
@@ -182,6 +266,13 @@ def get_timePeriod(timestamp):
 
 
 def get_weekday(timestamp):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff timestamp, it would 
+           know the weekday of the trip
+    --------------------------------------------------------------------
+    '''
     try:
         weekday = timestamp.weekday()
         if weekday == 0:
@@ -203,6 +294,13 @@ def get_weekday(timestamp):
 
 
 def get_year(timestamp):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff timestamp, it would 
+           know the year of the trip
+    --------------------------------------------------------------------
+    '''
     try:
         year = timestamp.year
         return year
@@ -211,6 +309,13 @@ def get_year(timestamp):
 
 
 def get_month(timestamp):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff timestamp, it would 
+           know the month of the trip
+    --------------------------------------------------------------------
+    '''
     try:
         month = timestamp.month
         return month
@@ -219,6 +324,13 @@ def get_month(timestamp):
 
 
 def get_day(timestamp):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. Based on the pickup and dropoff timestamp, it would 
+           know the day of the trip
+    --------------------------------------------------------------------
+    '''
     try:
         day = timestamp.day
         return day
@@ -226,14 +338,15 @@ def get_day(timestamp):
         pass
 
 
-def get_area(a_string):
-    try:
-        return int(a_string)
-    except (ValueError, TypeError):
-        pass
-
-
 def get_latlon(centroid):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. based on the pickup and dropoff centroid infoamation, it 
+           would return the lattitude and longitude of the trip in 
+           a tuple format
+    --------------------------------------------------------------------
+    '''
     try:
         lat, lon = centroid
         return lat, lon
@@ -242,6 +355,13 @@ def get_latlon(centroid):
         
 
 def get_community(a_string):
+    '''
+    --------------------------------------------------------------------
+    This function is created with the following purposes:
+        1. attempt to convert pickup and dropoff community area from a
+           string to an integer
+    --------------------------------------------------------------------
+    '''
     try:
         community = int(a_string)
         return community
@@ -283,8 +403,9 @@ class MRCleanAndCreate(MRJob):
                 if dropoff_time != '':
                     dropoff_timeobject = get_time(dropoff_time)[0]
                     dropoff_time = get_time(dropoff_time)[1]
-                #############################################################
+                ##############################################################
 
+                ############# Simple Process of Variables Type ###############
                 seconds = get_seconds(seconds)
 
                 # convert miles (miles column has no NAs)
@@ -304,25 +425,25 @@ class MRCleanAndCreate(MRJob):
                 # fill in missing dropoff community information            
                 dropoff_centroid = get_centroid(dropoff_centroid)
                 dropoff_area = get_community(dropoff_area)
+                ##############################################################
 
-            ######################################################################
+                ############ Create Key Trip Analysis Variables ##############
                 AbsDistance = get_distance(pickup_centroid, dropoff_centroid)
 
                 RRSL = get_RRSL(miles, AbsDistance)
                 
                 AvgVelocity = 23.7
+
                 AbsTime = get_AbsTime(AbsDistance)
 
                 RRST = get_RRST(seconds, AbsTime)
+                ##############################################################
 
-                pickup_hr = get_timePeriod(pickup_timeobject)
-                
+                ################### Trip Time Variables ######################
+                pickup_hr = get_timePeriod(pickup_timeobject) 
                 weekday = get_weekday(pickup_timeobject)
-
                 year = get_year(pickup_timeobject)
-
                 month = get_month(pickup_timeobject)
-
                 day = get_day(pickup_timeobject)
                     
                 pickup_region = get_region(pickup_area)
@@ -330,18 +451,27 @@ class MRCleanAndCreate(MRJob):
 
                 pickup_lat, pickup_lon = get_latlon(pickup_centroid)
                 dropoff_lat, dropoff_lon = get_latlon(dropoff_centroid)
+                ##############################################################
 
-                if RRSL != -1 and RRST != -1 and RRSL != None and RRST != None and\
+
+                # filter out trips that lacks RRSL and RRST statistics
+                if RRSL != -1 and RRST != -1 and \
+                   RRSL != None and RRST != None and \
                    RRSL != 0 and RRST != 0:
+                # create the info list: these are the returns wanted
                     info = [taxi_id, \
                             pickup_time, dropoff_time, \
                             seconds, miles, \
-                            pickup_area, dropoff_area, pickup_region, dropoff_region,\
-                            pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, \
+                            pickup_area, dropoff_area, \
+                            pickup_region, dropoff_region,\
+                            pickup_lat, pickup_lon, \
+                            dropoff_lat, dropoff_lon, \
                             fare, tips, tolls, extras, total, \
                             AbsDistance, RRSL, AbsTime, RRST, \
                             pickup_hr, weekday, year, month, day]               
+                # insert trip id to the beginning of the info list
                     info.insert(0, trip_id)
+
                     yield info, None
         except (ValueError, TypeError, UnboundLocalError):
             pass
