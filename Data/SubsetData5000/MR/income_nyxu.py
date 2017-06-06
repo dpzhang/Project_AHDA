@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 import numpy as np
-
-
-
 
 class MRIncomeAnnual(MRJob):
     
@@ -32,14 +28,15 @@ class MRIncomeAnnual(MRJob):
         average = f_total/n_year
         # syield the average income of a driver 
         yield key, average
-    def reducer_final_init(self):
         
-
+    def reducer_final_init(self):
         self.income_dict={}
         self.income_class={}
+        
     def reducer_final(self,key,average):
         # store the average income into a dictionary
         self.income_dict[key] = list(average)[0]
+        
     def reducer_final_final(self):
         # log transform drivers' average income and
         # classify drivers into normal drivers and rich drivers
@@ -58,6 +55,7 @@ class MRIncomeAnnual(MRJob):
                 self.income_class[dID] = 0
         # output the dictionary to a file for later use
         yield None,self.income_class
+        
     def steps(self):
         return [MRStep(mapper=self.mapper_first,
                        combiner=self.combiner_first,
