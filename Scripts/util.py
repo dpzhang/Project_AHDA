@@ -7,6 +7,7 @@ Author: @dpzhang
 
 I. Helper functions to clean dirty asf taxi trips data
 '''
+
 import numpy as np
 import os
 import re
@@ -17,7 +18,6 @@ import shapely
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 import string
-
 
 def get_fare(a_string):
     '''
