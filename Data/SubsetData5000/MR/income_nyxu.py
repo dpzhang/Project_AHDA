@@ -6,7 +6,6 @@ from mrjob.step import MRStep
 import numpy as np
 
 class MRIncomeAnnual(MRJob):
-    
     def mapper_first(self,_,line):
         rlist = line.split(',')
         taxi_id = rlist[1]
