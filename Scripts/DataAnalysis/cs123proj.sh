@@ -1,6 +1,7 @@
 #!/bin/bash
 # file: cs123proj.sh
-# cleantaxi.txt will be the clean dataset input
+# cleantaxi.txt will be the clean dataset input (in the google cloud storage,
+# for us it's gs://taxidataahda/cleantaxi.csv
 # for this next step, we delete all the " and blankspace
 cat cleantaxi.txt | tr -d '" '  > cleantaxi.csv
 # (We planned to use package "csv" at first, so turned this file to .csv)

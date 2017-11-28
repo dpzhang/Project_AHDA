@@ -9,14 +9,16 @@ import numpy as np
 
 
 
-class MRIncomeAnnual(MRJob):
-    
+class MRIncomeAnnual(MRJob):    
     def mapper_first(self,_,line):
         rlist = line.split(',')
         taxi_id = rlist[1]
         year = rlist[2].split('/')[2][:4]
-        total = float(rlist[18])
-        if (taxi_id!=''):
+        try:
+            total = float(rlist[18])
+        except:
+            total = None
+        if (taxi_id!='' and total != None):
             yield (taxi_id,year),total
 
     def combiner_first(self,key,fares):
